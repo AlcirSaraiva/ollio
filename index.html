@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Ollama</title>
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <script defer src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+    <link rel="shortcut icon" href="favicon.png">
+</head>
+
+<body>
+    <div class="logo"></div>
+    <div id="stream" class="stream-div">
+        <label>Stream
+            <input type="checkbox" id="streamToggle" />
+        </label>
+    </div>
+    <div class="modelSelect">
+        <label>Model:</label>
+        <div id="modelDropdown" class="dropdown">
+            <div id="selectedModel" class="dropdown-selected">
+                llama3.2-vision:11b
+            </div>
+            <div id="modelOptions" class="dropdown-options hidden">
+                <div data-value="codellama:7b">
+                    codellama:7b
+                </div>
+                <div data-value="gemma3:4b">
+                    gemma3:4b
+                </div>
+                <div data-value="olmo-3:7b">
+                    olmo-3:7b
+                </div>
+                <div data-value="wizard-vicuna-uncensored:7b">
+                    wizard-vicuna-uncensored:7b
+                </div>
+                <div data-value="llama3.2:3b">
+                    llama3.2:3b
+                </div>
+                <div data-value="llama3.2:1b">
+                    llama3.2:1b
+                </div>
+                <div data-value="llama3.2-vision:11b">
+                    llama3.2-vision:11b
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="chat-container">
+        <div id="chatHistory" class="chat-history"></div>
+        <div id="dragHandle" class="drag-handle"></div>
+        <div class="input-area">
+            <button id="attachBtn">+</button>
+            <textarea id="userInput" placeholder="Type your message…" rows="1"></textarea>
+            <button id="sendBtn">Send</button>
+            <button id="clearBtn">Clear</button>
+        </div>
+    </div>
+</body>
+
+</html>
