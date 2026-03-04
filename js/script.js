@@ -1,11 +1,13 @@
 let messages = JSON.parse(localStorage.getItem("chatMemory")) || [];
 const MAX_MESSAGES = 50;
+let attachBtn;
 let selectedModel;
 let chatHistory;
 let userInput;
 let sendBtn;
 let clearBtn;
 let isDragging = false;
+let attachedBase64 = null;
 
 function trimMemory() {
     if (messages.length > MAX_MESSAGES) {
@@ -70,14 +72,23 @@ async function sendMessage() {
 
     addMessage("user", messageContent);
 
-    messages.push({
+    const userMessage = {
         role: "user",
         content: messageContent
-    });
+    };
+    if (attachedBase64) {
+        userMessage.images = [attachedBase64];
+    }
+    messages.push(userMessage);
+
     trimMemory();
     saveMemory();
 
     userInput.value = "";
+    attachedBase64 = null;
+    document.getElementById("fileName").textContent = "";
+    document.getElementById("fileName").style.display = "none";
+    document.getElementById("fileInput").value = "";
 
     const isStreaming = streamToggle.checked;
     let typingMessage;
@@ -184,11 +195,49 @@ async function sendMessage() {
     }
 }
 
+function updateAttachButton() {
+    if (attachedBase64 == null) {
+        attachBtn.textContent = "+";
+    } else {
+        attachBtn.textContent = "×";
+    }
+}
+
 function init() {
     chatHistory = document.getElementById("chatHistory");
     userInput = document.getElementById("userInput");
     sendBtn = document.getElementById("sendBtn");
     clearBtn = document.getElementById("clearBtn");
+    attachBtn = document.getElementById('attachBtn');
+    updateAttachButton();
+
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileName');
+    attachBtn.addEventListener('click', () => {
+        if (attachedBase64) {
+            attachedBase64 = null;
+            fileInput.value = "";
+            fileNameDisplay.textContent = "";
+            fileNameDisplay.style.display = "none";
+            updateAttachButton();
+            return;
+        }
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        fileNameDisplay.textContent = file.name;
+        fileNameDisplay.style.display = "block";
+        fileNameDisplay.style.marginRight = "0.7vw";
+        const reader = new FileReader();
+        reader.onload = () => {
+            attachedBase64 = reader.result.split(',')[1];
+            updateAttachButton();
+        };
+
+        reader.readAsDataURL(file);
+    });
 
     const selectedModelDiv = document.getElementById("selectedModel");
     const optionsDiv = document.getElementById("modelOptions");

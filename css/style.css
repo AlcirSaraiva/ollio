@@ -138,6 +138,7 @@ body {
 .message p:first-child {
     margin-top: 0;
 }
+
 .user {
     color: var(--clr-info-a30);
     font-weight: bold;
@@ -151,11 +152,20 @@ body {
     display: flex;
     flex-direction: row;
     align-items: first baseline;
-    gap: 8px;
     flex: 1;
     padding: 12px;
     border-top: 1px solid var(--clr-surface-a30);
     background-color: var(--clr-surface-a20);
+}
+
+.input-area .file-name {
+    font-family: text;
+    font-size: 0.8vw;
+    color: var(--clr-warning-a20);
+    max-width: 20vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .input-area textarea {
@@ -189,11 +199,11 @@ body {
 }
 
 #attachBtn {
-    margin-right: 0.2vw;
+    margin-right: 0.7vw;
 }
 
 #sendBtn, #clearBtn {
-    margin-left: 0.2vw;
+    margin-left: 0.7vw;
 }
 
 .typing {
