@@ -359,6 +359,7 @@ async function sendMessage() {
     renderSavedList();
 
     userInput.value = "";
+    userInput.style.height = "auto";
     attachedBase64 = null;
     document.getElementById("fileName").textContent = "";
     document.getElementById("fileName").style.display = "none";
