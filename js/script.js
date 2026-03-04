@@ -260,7 +260,7 @@ async function sendMessage() {
         conversations[currentConversationId] = {
             id: currentConversationId,
             createdAt: new Date().toISOString(),
-            messages: [] // <-- empty for now
+            messages: []
         };
     }
 
@@ -280,10 +280,8 @@ async function sendMessage() {
     let typingMessage;
 
     if (isStreaming) {
-        // start empty for streaming
-        typingMessage = addMessage("assistant", "", "typing");
+        typingMessage = addMessage("assistant", "AI is thinking…", "typing");
     } else {
-        // normal placeholder
         typingMessage = addMessage("assistant", "AI is typing…", "typing");
     }
 
