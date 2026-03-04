@@ -431,3 +431,16 @@ body {
 .saved-item:hover .delete-btn {
     opacity: 1;
 }
+
+.info {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 22.8vw;
+    padding: 1vw;
+    font-family: text;
+    font-size: 0.5vw;
+    color: var(--clr-warning-a20);
+    overflow-y: auto;
+}
