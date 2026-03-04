@@ -60,8 +60,13 @@ function clearChat() {
     messages.length = 0;
     localStorage.removeItem("chatMemory");
     chatHistory.innerHTML = "";
-    addMessage("assistant", "Context cleared. New conversation started.");
+    const msgDiv = addMessage("assistant", "Context cleared. New conversation started.");
     userInput.focus();
+    setTimeout(() => {
+        if (msgDiv.parentNode) {
+            msgDiv.parentNode.removeChild(msgDiv);
+        }
+    }, 3000);
 }
 
 function cleanResponse(text) {
