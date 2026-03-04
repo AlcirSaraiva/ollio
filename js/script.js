@@ -286,10 +286,6 @@ function init() {
         reader.readAsDataURL(file);
     });
 
-
-
-
-
     const selectedModelDiv = document.getElementById("selectedModel");
     const modelOptionsDiv = document.getElementById("modelOptions");
     const modelDropdown = document.getElementById("modelDropdown");
