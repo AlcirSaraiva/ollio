@@ -61,6 +61,7 @@ function clearChat() {
     localStorage.removeItem("chatMemory");
     chatHistory.innerHTML = "";
     addMessage("assistant", "Context cleared. New conversation started.");
+    userInput.focus();
 }
 
 function cleanResponse(text) {
@@ -91,17 +92,17 @@ function addMessage(role, text, className = "", isNew = false) {
     }
 
     if (isNew) {
-            const dateTimeDiv = document.createElement("div");
-            dateTimeDiv.className = "date-time";
+        const dateTimeDiv = document.createElement("div");
+        dateTimeDiv.className = "date-time";
 
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
 
-            dateTimeDiv.textContent = `${hours}:${minutes}:${seconds}`;
-            div.appendChild(dateTimeDiv);
-        }
+        dateTimeDiv.textContent = `${hours}:${minutes}:${seconds}`;
+        div.appendChild(dateTimeDiv);
+    }
 
     chatHistory.appendChild(div);
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -112,6 +113,9 @@ function setLoading(isLoading) {
     userInput.disabled = isLoading;
     sendBtn.disabled = false;
     sendBtn.textContent = isLoading ? "Cancel" : "Send";
+    clearBtn.disabled = isLoading;
+    clearBtn.style.color = isLoading ? "var(--clr-surface-tonal-a20)" : "var(--clr-dark-a0)";
+    clearBtn.style.pointerEvents = isLoading ? "none" : "auto";
 }
 
 async function sendMessage() {
@@ -255,7 +259,6 @@ async function sendMessage() {
             trimMemoryByTokens();
             saveMemory();
         }
-
     } catch (err) {
         if (err.name === "AbortError") {
             typingMessage.classList.remove("typing");
@@ -269,6 +272,7 @@ async function sendMessage() {
         currentController = null;
         typingMessage.classList.remove("typing");
         setLoading(false);
+        userInput.focus();
     }
 }
 
