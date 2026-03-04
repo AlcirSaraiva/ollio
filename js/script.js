@@ -1,15 +1,16 @@
-let messages = JSON.parse(localStorage.getItem("chatMemory")) || [];
+let messages = [];
 let attachBtn;
 let selectedModel;
 let chatHistory;
 let userInput;
 let sendBtn;
-let clearBtn;
 let isDragging = false;
 let attachedBase64 = null;
 let streamToggle;
 let currentController = null;
 let MAX_TOKENS = 3072;
+let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
+let currentConversationId = null;
 
 function estimateTokensFromText(text) {
     if (!text) return 0;
@@ -52,21 +53,109 @@ function trimMemoryByTokens(maxTokens = MAX_TOKENS) {
     }
 }
 
-function saveMemory() {
-    localStorage.setItem("chatMemory", JSON.stringify(messages));
+function renderSavedList() {
+    const savedList = document.querySelector(".saved-list");
+    const savedTitle = document.querySelector(".saved-title");
+    savedList.innerHTML = "";
+
+    const convArray = Object.values(conversations)
+        .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    if (convArray.length === 0) {
+        savedTitle.style.display = "none";
+    } else {
+        savedTitle.style.display = "block";
+    }
+
+    convArray.forEach(conv => {
+
+        const item = document.createElement("div");
+        item.classList.add("saved-item");
+
+        if (conv.id === currentConversationId) {
+            item.classList.add("active-conversation");
+        }
+
+        // Left side: timestamp + first sentence
+        const textSpan = document.createElement("span");
+
+        const date = new Date(conv.createdAt);
+        const timestamp = `${String(date.getDate()).padStart(2,'0')}/` +
+            `${String(date.getMonth()+1).padStart(2,'0')}/` +
+            `${date.getFullYear()} ` +
+            `${String(date.getHours()).padStart(2,'0')}:` +
+            `${String(date.getMinutes()).padStart(2,'0')}`;
+
+        let firstSentence = "";
+        if (conv.messages && conv.messages.length > 0) {
+            const msg = conv.messages[0].content || "";
+            // take text until first period or 30 chars max
+            const periodIndex = msg.indexOf(".");
+            firstSentence = periodIndex !== -1 ?
+                msg.slice(0, periodIndex + 1) :
+                msg;
+            if (firstSentence.length > 30) firstSentence = firstSentence.slice(0, 30) + "…";
+        }
+
+        textSpan.textContent = `${timestamp} ${firstSentence}`;
+
+        // Right side: delete button
+        const deleteBtn = document.createElement("a");
+        deleteBtn.textContent = "×";
+        deleteBtn.classList.add("delete-btn");
+
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            deleteConversation(conv.id);
+        });
+
+        item.addEventListener("click", () => {
+            loadConversation(conv.id);
+            renderSavedList();
+        });
+
+        item.appendChild(textSpan);
+        item.appendChild(deleteBtn);
+
+        savedList.appendChild(item);
+    });
 }
 
-function clearChat() {
-    messages.length = 0;
-    localStorage.removeItem("chatMemory");
+function loadConversation(id) {
+    const conv = conversations[id];
+    if (!conv) return;
+
+    currentConversationId = id;
+    messages = [...conv.messages];
+
     chatHistory.innerHTML = "";
-    const msgDiv = addMessage("assistant", "Context cleared. New conversation started.");
-    userInput.focus();
-    setTimeout(() => {
-        if (msgDiv.parentNode) {
-            msgDiv.parentNode.removeChild(msgDiv);
-        }
-    }, 3000);
+    messages.forEach(msg => {
+        addMessage(msg.role, msg.content);
+    });
+}
+
+function saveConversations() {
+    localStorage.setItem("conversations", JSON.stringify(conversations));
+}
+
+function deleteConversation(id) {
+    if (!confirm("Delete this conversation?")) return;
+    delete conversations[id];
+
+    if (id === currentConversationId) {
+        messages = [];
+        currentConversationId = null;
+        chatHistory.innerHTML = "";
+    }
+
+    saveConversations();
+    renderSavedList();
+}
+
+function persistCurrentConversation() {
+    if (!currentConversationId) return;
+    conversations[currentConversationId].messages = [...messages];
+    saveConversations();
 }
 
 function cleanResponse(text) {
@@ -118,9 +207,6 @@ function setLoading(isLoading) {
     userInput.disabled = isLoading;
     sendBtn.disabled = false;
     sendBtn.textContent = isLoading ? "Cancel" : "Send";
-    clearBtn.disabled = isLoading;
-    clearBtn.style.color = isLoading ? "var(--clr-surface-tonal-a20)" : "var(--clr-dark-a0)";
-    clearBtn.style.pointerEvents = isLoading ? "none" : "auto";
 }
 
 async function sendMessage() {
@@ -143,10 +229,23 @@ async function sendMessage() {
     if (attachedBase64) {
         userMessage.images = [attachedBase64];
     }
-    messages.push(userMessage);
 
+    // If no conversation yet, create one
+    if (!currentConversationId) {
+        currentConversationId = "conv_" + Date.now();
+
+        conversations[currentConversationId] = {
+            id: currentConversationId,
+            createdAt: new Date().toISOString(),
+            messages: [] // <-- empty for now
+        };
+    }
+
+    messages.push(userMessage);
     trimMemoryByTokens();
-    saveMemory();
+    persistCurrentConversation();
+
+    renderSavedList();
 
     userInput.value = "";
     attachedBase64 = null;
@@ -243,7 +342,7 @@ async function sendMessage() {
                     content: finalText
                 });
                 trimMemoryByTokens();
-                saveMemory();
+                persistCurrentConversation();
             }
 
         } else {
@@ -262,7 +361,7 @@ async function sendMessage() {
                 content: aiMessage
             });
             trimMemoryByTokens();
-            saveMemory();
+            persistCurrentConversation();
         }
     } catch (err) {
         if (err.name === "AbortError") {
@@ -285,7 +384,6 @@ function init() {
     chatHistory = document.getElementById("chatHistory");
     userInput = document.getElementById("userInput");
     sendBtn = document.getElementById("sendBtn");
-    clearBtn = document.getElementById("clearBtn");
     attachBtn = document.getElementById('attachBtn');
     attachBtn.textContent = "+";
 
@@ -373,7 +471,7 @@ function init() {
             selectedTokensDiv.textContent = option.textContent;
             localStorage.setItem("MAX_TOKENS", MAX_TOKENS);
             trimMemoryByTokens();
-            saveMemory();
+            persistCurrentConversation();
             tokensOptionsDiv.classList.add("hidden");
         });
     });
@@ -384,12 +482,7 @@ function init() {
         }
     });
 
-    messages.forEach(msg => {
-        addMessage(msg.role, msg.content);
-    });
-
     sendBtn.addEventListener("click", sendMessage);
-    clearBtn.addEventListener("click", clearChat);
 
     userInput.addEventListener("input", () => {
         userInput.style.height = "auto";
@@ -455,6 +548,8 @@ function init() {
     marked.setOptions({
         breaks: true
     });
+
+    renderSavedList();
 }
 
 window.addEventListener('load', init);

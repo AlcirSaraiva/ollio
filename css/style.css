@@ -355,3 +355,59 @@ body {
     color: var(--clr-primary-a50);
     pointer-events: none;
 }
+
+.saved-title {
+    position: absolute;
+    top: 48vh;
+    left: 1.3vw;
+    font-family: text;
+    font-size: 0.85vw;
+    font-weight: bold;
+    color: var(--clr-surface-a70);
+    display: none;
+}
+
+.saved-list {
+    position: absolute;
+    top: 50vh;
+    left: 0;
+    width: 22.8vw;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 1vw;
+    font-family: text;
+    font-size: 0.8vw;
+    color: var(--clr-surface-a80);
+}
+
+.saved-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0.5vw;
+    padding: 0.3vw;
+    border-radius: 0.3vw;
+}
+
+
+.saved-item:hover {
+    background-color: var(--clr-surface-a20);
+}
+
+.active-conversation {
+    font-weight: bold;
+    color: var(--clr-info-a20);
+}
+
+.saved-item .delete-btn {
+    opacity: 0;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    color: red;
+    margin-left: 1vw;
+}
+
+.saved-item:hover .delete-btn {
+    opacity: 1;
+}
