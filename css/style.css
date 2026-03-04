@@ -356,6 +356,21 @@ body {
     pointer-events: none;
 }
 
+.copy {
+    position: absolute;
+    top: 0.1vw;
+    right: 0.3vw;
+    font-family: text;
+    font-size: 0.51vw;
+    color: var(--clr-surface-a30);
+    cursor: pointer;
+    width: auto;
+}
+
+.copy:hover {
+    color: var(--clr-info-a30);
+}
+
 .saved-title {
     position: absolute;
     top: 48vh;

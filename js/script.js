@@ -272,6 +272,36 @@ function addMessage(role, text, className = "", isNew = false) {
         div.textContent = "You: " + text;
     }
 
+    const copy = document.createElement("div");
+    copy.className = "copy";
+    copy.textContent = "copy";
+    copy.addEventListener("click", async () => {
+        let textToCopy = "";
+
+        if (role === "assistant") {
+            const contentDiv = div.querySelector(".content");
+            textToCopy = contentDiv ? contentDiv.innerText : "";
+        } else {
+            textToCopy = div.innerText.replace(/^You:\s*/, "");
+        }
+
+        try {
+            await navigator.clipboard.writeText(textToCopy);
+
+            copy.textContent = "copied";
+            copy.style.color = "var(--clr-info-a10)";
+
+            setTimeout(() => {
+                copy.textContent = "copy";
+                copy.style.color = "";
+            }, 3000);
+
+        } catch (err) {
+            console.error("Clipboard failed:", err);
+        }
+    });
+    div.appendChild(copy);
+
     if (isNew) {
         const dateTimeDiv = document.createElement("div");
         dateTimeDiv.className = "date-time";
@@ -338,9 +368,9 @@ async function sendMessage() {
     let typingMessage;
 
     if (isStreaming) {
-        typingMessage = addMessage("assistant", "AI is thinking…", "typing");
+        typingMessage = addMessage("assistant", "Thinking…", "typing");
     } else {
-        typingMessage = addMessage("assistant", "AI is typing…", "typing");
+        typingMessage = addMessage("assistant", "Typing…", "typing");
     }
 
     setLoading(true);
@@ -560,8 +590,8 @@ function init() {
         isDragging = false;
         document.body.style.cursor = "default";
         document.body.style.userSelect = "auto";
-        const chatHistory = document.getElementById("chatHistory");
-        chatHistory.scrollTop = chatHistory.scrollHeight;
+        //const chatHistory = document.getElementById("chatHistory");
+        //chatHistory.scrollTop = chatHistory.scrollHeight;
     });
 
     document.addEventListener("mousemove", (e) => {
