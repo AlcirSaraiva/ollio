@@ -91,6 +91,7 @@ body {
 }
 
 .message {
+    position: relative;
     line-height: 1.6;
     margin-bottom: 1vw;
     border: 1px solid var(--clr-surface-a20);
@@ -343,4 +344,14 @@ body {
 
 .drag-handle:hover {
     background: var(--clr-info-a20);
+}
+
+.date-time {
+    position: absolute;
+    bottom: -0.9vw;
+    right: 0vw;
+    font-family: text;
+    font-size: 0.51vw;
+    color: var(--clr-primary-a50);
+    pointer-events: none;
 }

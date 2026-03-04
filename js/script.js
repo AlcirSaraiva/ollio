@@ -69,7 +69,7 @@ function cleanResponse(text) {
     return t.trim();
 }
 
-function addMessage(role, text, className = "") {
+function addMessage(role, text, className = "", isNew = false) {
     const div = document.createElement("div");
     div.className = `message ${role} ${className}`;
 
@@ -89,6 +89,19 @@ function addMessage(role, text, className = "") {
     } else {
         div.textContent = "You: " + text;
     }
+
+    if (isNew) {
+            const dateTimeDiv = document.createElement("div");
+            dateTimeDiv.className = "date-time";
+
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            dateTimeDiv.textContent = `${hours}:${minutes}:${seconds}`;
+            div.appendChild(dateTimeDiv);
+        }
 
     chatHistory.appendChild(div);
     chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -112,7 +125,7 @@ async function sendMessage() {
 
     let messageContent = text;
 
-    addMessage("user", messageContent);
+    addMessage("user", messageContent, "", true);
 
     const userMessage = {
         role: "user",
@@ -208,6 +221,14 @@ async function sendMessage() {
             // save final text to memory
             const finalText = typingMessage.dataset.raw || "";
             if (!currentController?.signal.aborted) {
+
+                // remove placeholder typing div
+                chatHistory.removeChild(typingMessage);
+
+                // add new AI message with timestamp
+                addMessage("assistant", finalText, "", true);
+
+
                 messages.push({
                     role: "assistant",
                     content: finalText
@@ -220,12 +241,13 @@ async function sendMessage() {
             // non-streaming
             const data = await response.json();
             const aiMessage = data?.message?.content ?? "No response.";
-            typingMessage.dataset.raw = aiMessage;
-            const contentDiv = typingMessage.querySelector(".content");
 
-            contentDiv.innerHTML = cleanResponse(
-                DOMPurify.sanitize(marked.parse(aiMessage.trimStart()))
-            );
+            // remove the old typing placeholder
+            chatHistory.removeChild(typingMessage);
+
+            // add new AI message with timestamp
+            addMessage("assistant", aiMessage, "", true);
+
             messages.push({
                 role: "assistant",
                 content: aiMessage
