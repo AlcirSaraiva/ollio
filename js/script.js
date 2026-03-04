@@ -1,5 +1,4 @@
 let messages = [];
-let attachBtn;
 let selectedModel;
 let chatHistory;
 let userInput;
@@ -11,6 +10,59 @@ let currentController = null;
 let MAX_TOKENS = 3072;
 let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
 let currentConversationId = null;
+
+function renderModelsList() {
+    const selectedModelDiv = document.getElementById("selectedModel");
+    const modelOptionsDiv = document.getElementById("modelOptions");
+
+    // Fetch models from Ollama API
+    fetch("http://localhost:11434/api/tags")
+        .then(res => res.json())
+        .then(data => {
+            const models = data.models; // array of models
+            modelOptionsDiv.innerHTML = ""; // clear existing options
+
+            models.forEach((model, index) => {
+                const option = document.createElement("div");
+                option.textContent = model.name;
+                option.dataset.value = model.name;
+
+                // Click event
+                option.addEventListener("click", () => {
+                    selectedModelDiv.textContent = model.name;
+                    localStorage.setItem("selectedModel", model.name);
+                    modelOptionsDiv.classList.add("hidden");
+                });
+
+                modelOptionsDiv.appendChild(option);
+
+                // If it’s the first model OR matches saved selection, set as selected
+                if (index === 0 && !localStorage.getItem("selectedModel")) {
+                    selectedModelDiv.textContent = model.name;
+                    localStorage.setItem("selectedModel", model.name);
+                } else if (model.name === localStorage.getItem("selectedModel")) {
+                    selectedModelDiv.textContent = model.name;
+                }
+            });
+        })
+        .catch(err => {
+            console.error("Failed to fetch models:", err);
+            selectedModelDiv.textContent = "Error loading models";
+        });
+
+    // Toggle dropdown visibility
+    selectedModelDiv.addEventListener("click", () => {
+        modelOptionsDiv.classList.toggle("hidden");
+    });
+
+    // Close dropdown if clicking outside
+    document.addEventListener("click", (e) => {
+        const modelDropdown = document.getElementById("modelDropdown");
+        if (!modelDropdown.contains(e.target)) {
+            modelOptionsDiv.classList.add("hidden");
+        }
+    });
+}
 
 function estimateTokensFromText(text) {
     if (!text) return 0;
@@ -289,6 +341,8 @@ async function sendMessage() {
 
     currentController = new AbortController();
 
+    selectedModel = document.getElementById("selectedModel").textContent;
+
     try {
         const response = await fetch("http://localhost:11434/api/chat", {
             method: "POST",
@@ -405,7 +459,7 @@ function init() {
     chatHistory = document.getElementById("chatHistory");
     userInput = document.getElementById("userInput");
     sendBtn = document.getElementById("sendBtn");
-    attachBtn = document.getElementById('attachBtn');
+    const attachBtn = document.getElementById('attachBtn');
     attachBtn.textContent = "+";
 
     const fileInput = document.getElementById('fileInput');
@@ -434,37 +488,6 @@ function init() {
         };
 
         reader.readAsDataURL(file);
-    });
-
-    const selectedModelDiv = document.getElementById("selectedModel");
-    const modelOptionsDiv = document.getElementById("modelOptions");
-    const modelDropdown = document.getElementById("modelDropdown");
-
-    selectedModel = localStorage.getItem("selectedModel") || "llama3.2:3b";
-    let selectedModelLabel = [...modelOptionsDiv.children]
-        .find(opt => opt.dataset.value === selectedModel)?.textContent;
-
-    if (selectedModelLabel) {
-        selectedModelDiv.textContent = selectedModelLabel;
-    }
-
-    selectedModelDiv.addEventListener("click", () => {
-        modelOptionsDiv.classList.toggle("hidden");
-    });
-
-    modelOptionsDiv.querySelectorAll("div").forEach(option => {
-        option.addEventListener("click", () => {
-            selectedModel = option.dataset.value;
-            selectedModelDiv.textContent = option.textContent;
-            localStorage.setItem("selectedModel", selectedModel);
-            modelOptionsDiv.classList.add("hidden");
-        });
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!modelDropdown.contains(e.target)) {
-            modelOptionsDiv.classList.add("hidden");
-        }
     });
 
     const selectedTokensDiv = document.getElementById("selectedTokens");
@@ -576,6 +599,7 @@ function init() {
     }
 
     renderSavedList();
+    renderModelsList();
 }
 
 window.addEventListener('load', init);
