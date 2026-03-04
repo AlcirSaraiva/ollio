@@ -56,6 +56,7 @@ function trimMemoryByTokens(maxTokens = MAX_TOKENS) {
 function renderSavedList() {
     const savedList = document.querySelector(".saved-list");
     const savedTitle = document.querySelector(".saved-title");
+    const newConversation = document.querySelector(".new-conversation");
     savedList.innerHTML = "";
 
     const convArray = Object.values(conversations)
@@ -63,8 +64,10 @@ function renderSavedList() {
 
     if (convArray.length === 0) {
         savedTitle.style.display = "none";
+        newConversation.style.display = "none";
     } else {
         savedTitle.style.display = "block";
+        newConversation.style.display = "block";
     }
 
     convArray.forEach(conv => {
@@ -76,7 +79,6 @@ function renderSavedList() {
             item.classList.add("active-conversation");
         }
 
-        // Left side: timestamp + first sentence
         const textSpan = document.createElement("span");
 
         const date = new Date(conv.createdAt);
@@ -89,15 +91,15 @@ function renderSavedList() {
         let firstSentence = "";
         if (conv.messages && conv.messages.length > 0) {
             const msg = conv.messages[0].content || "";
-            // take text until first period or 30 chars max
             const periodIndex = msg.indexOf(".");
             firstSentence = periodIndex !== -1 ?
                 msg.slice(0, periodIndex + 1) :
                 msg;
-            if (firstSentence.length > 30) firstSentence = firstSentence.slice(0, 30) + "…";
+            if (firstSentence.length > 30) firstSentence = firstSentence.slice(0, 40) + "…";
         }
 
-        textSpan.textContent = `${timestamp} ${firstSentence}`;
+        textSpan.textContent = `${timestamp}\n${firstSentence}`;
+        textSpan.style.whiteSpace = "pre";
 
         // Right side: delete button
         const deleteBtn = document.createElement("a");
@@ -146,6 +148,11 @@ function deleteConversation(id) {
         messages = [];
         currentConversationId = null;
         chatHistory.innerHTML = "";
+        userInput.value = "";
+        attachedBase64 = null;
+        document.getElementById("fileName").textContent = "";
+        document.getElementById("fileName").style.display = "none";
+        document.getElementById("fileInput").value = "";
     }
 
     saveConversations();
@@ -156,6 +163,22 @@ function persistCurrentConversation() {
     if (!currentConversationId) return;
     conversations[currentConversationId].messages = [...messages];
     saveConversations();
+}
+
+function startNewConversation() {
+    messages = [];
+    chatHistory.innerHTML = "";
+    currentConversationId = null;
+    userInput.value = "";
+    attachedBase64 = null;
+    document.getElementById("fileName").textContent = "";
+    document.getElementById("fileName").style.display = "none";
+    document.getElementById("fileInput").value = "";
+
+    renderSavedList();
+
+    const savedList = document.querySelector(".saved-list");
+    if (savedList) savedList.scrollTop = savedList.scrollHeight;
 }
 
 function cleanResponse(text) {
@@ -548,6 +571,11 @@ function init() {
     marked.setOptions({
         breaks: true
     });
+
+    const newBtn = document.querySelector(".new-conversation");
+    if (newBtn) {
+        newBtn.addEventListener("click", startNewConversation);
+    }
 
     renderSavedList();
 }

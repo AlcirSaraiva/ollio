@@ -364,7 +364,26 @@ body {
     font-size: 0.85vw;
     font-weight: bold;
     color: var(--clr-surface-a70);
-    display: none;
+    width: auto;
+}
+
+.new-conversation {
+    position: absolute;
+    top: 48vh;
+    width: auto;
+    right: 76.2vw;
+    font-family: text;
+    font-size: 0.85vw;
+    
+    color: var(--clr-surface-a70);
+    text-decoration: none;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.new-conversation:hover {
+    font-weight: bold;
+    color: var(--clr-info-a20);
 }
 
 .saved-list {
@@ -388,6 +407,7 @@ body {
     margin-bottom: 0.5vw;
     padding: 0.3vw;
     border-radius: 0.3vw;
+    line-height: 1.1vw;
 }
 
 
