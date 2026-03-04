@@ -1,5 +1,4 @@
 let messages = JSON.parse(localStorage.getItem("chatMemory")) || [];
-const MAX_MESSAGES = 50;
 let attachBtn;
 let selectedModel;
 let chatHistory;
@@ -10,10 +9,46 @@ let isDragging = false;
 let attachedBase64 = null;
 let streamToggle;
 let currentController = null;
+const MAX_TOKENS = 3000; // adjust per model
 
-function trimMemory() {
-    if (messages.length > MAX_MESSAGES) {
-        messages.splice(0, messages.length - MAX_MESSAGES);
+function estimateTokensFromText(text) {
+    if (!text) return 0;
+    return Math.ceil(text.length / 4);
+}
+
+function estimateTokensFromMessage(msg) {
+    let total = 0;
+
+    // text content
+    total += estimateTokensFromText(msg.content);
+
+    // image base64 (VERY heavy)
+    if (msg.images && Array.isArray(msg.images)) {
+        for (const img of msg.images) {
+            total += Math.ceil(img.length / 4);
+        }
+    }
+
+    return total;
+}
+
+function trimMemoryByTokens(maxTokens = MAX_TOKENS) {
+    let total = 0;
+
+    for (let i = messages.length - 1; i >= 0; i--) {
+        total += estimateTokensFromMessage(messages[i]);
+
+        if (total > maxTokens) {
+            const firstSystemIndex = messages.findIndex(m => m.role === "system");
+
+            if (firstSystemIndex !== -1 && firstSystemIndex < i) {
+                messages.splice(firstSystemIndex + 1, i - firstSystemIndex - 1);
+            } else {
+                messages.splice(0, i);
+            }
+
+            break;
+        }
     }
 }
 
@@ -88,7 +123,7 @@ async function sendMessage() {
     }
     messages.push(userMessage);
 
-    trimMemory();
+    trimMemoryByTokens();
     saveMemory();
 
     userInput.value = "";
@@ -172,12 +207,14 @@ async function sendMessage() {
 
             // save final text to memory
             const finalText = typingMessage.dataset.raw || "";
-            messages.push({
-                role: "assistant",
-                content: finalText
-            });
-            trimMemory();
-            saveMemory();
+            if (!currentController?.signal.aborted) {
+                messages.push({
+                    role: "assistant",
+                    content: finalText
+                });
+                trimMemoryByTokens();
+                saveMemory();
+            }
 
         } else {
             // non-streaming
@@ -193,7 +230,7 @@ async function sendMessage() {
                 role: "assistant",
                 content: aiMessage
             });
-            trimMemory();
+            trimMemoryByTokens();
             saveMemory();
         }
 
