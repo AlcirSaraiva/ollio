@@ -9,7 +9,7 @@ let isDragging = false;
 let attachedBase64 = null;
 let streamToggle;
 let currentController = null;
-const MAX_TOKENS = 3000; // adjust per model
+let MAX_TOKENS = 3072;
 
 function estimateTokensFromText(text) {
     if (!text) return 0;
@@ -286,34 +286,74 @@ function init() {
         reader.readAsDataURL(file);
     });
 
+
+
+
+
     const selectedModelDiv = document.getElementById("selectedModel");
-    const optionsDiv = document.getElementById("modelOptions");
-    const dropdown = document.getElementById("modelDropdown");
+    const modelOptionsDiv = document.getElementById("modelOptions");
+    const modelDropdown = document.getElementById("modelDropdown");
 
     selectedModel = localStorage.getItem("selectedModel") || "llama3.2:3b";
-    let selectedLabel = [...optionsDiv.children]
+    let selectedModelLabel = [...modelOptionsDiv.children]
         .find(opt => opt.dataset.value === selectedModel)?.textContent;
 
-    if (selectedLabel) {
-        selectedModelDiv.textContent = selectedLabel;
+    if (selectedModelLabel) {
+        selectedModelDiv.textContent = selectedModelLabel;
     }
 
     selectedModelDiv.addEventListener("click", () => {
-        optionsDiv.classList.toggle("hidden");
+        modelOptionsDiv.classList.toggle("hidden");
     });
 
-    optionsDiv.querySelectorAll("div").forEach(option => {
+    modelOptionsDiv.querySelectorAll("div").forEach(option => {
         option.addEventListener("click", () => {
             selectedModel = option.dataset.value;
             selectedModelDiv.textContent = option.textContent;
             localStorage.setItem("selectedModel", selectedModel);
-            optionsDiv.classList.add("hidden");
+            modelOptionsDiv.classList.add("hidden");
         });
     });
 
     document.addEventListener("click", (e) => {
-        if (!dropdown.contains(e.target)) {
-            optionsDiv.classList.add("hidden");
+        if (!modelDropdown.contains(e.target)) {
+            modelOptionsDiv.classList.add("hidden");
+        }
+    });
+
+    const selectedTokensDiv = document.getElementById("selectedTokens");
+    const tokensOptionsDiv = document.getElementById("tokensOptions");
+    const tokensDropdown = document.getElementById("tokensDropdown");
+
+    MAX_TOKENS = parseInt(localStorage.getItem("MAX_TOKENS"), 10) || 3072;
+
+    const selectedOption = [...tokensOptionsDiv.children]
+        .find(opt => parseInt(opt.dataset.value, 10) === MAX_TOKENS);
+
+    if (selectedOption) {
+        selectedTokensDiv.textContent = selectedOption.textContent.trim();
+    } else {
+        selectedTokensDiv.textContent = "3K"; // fallback
+    }
+
+    selectedTokensDiv.addEventListener("click", () => {
+        tokensOptionsDiv.classList.toggle("hidden");
+    });
+
+    tokensOptionsDiv.querySelectorAll("div").forEach(option => {
+        option.addEventListener("click", () => {
+            MAX_TOKENS = parseInt(option.dataset.value, 10);
+            selectedTokensDiv.textContent = option.textContent;
+            localStorage.setItem("MAX_TOKENS", MAX_TOKENS);
+            trimMemoryByTokens();
+            saveMemory();
+            tokensOptionsDiv.classList.add("hidden");
+        });
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!tokensDropdown.contains(e.target)) {
+            tokensOptionsDiv.classList.add("hidden");
         }
     });
 

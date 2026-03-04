@@ -232,6 +232,15 @@ body {
     padding: 0.8vw 1vw;
 }
 
+.tokensSelect {
+    position: absolute;
+    top: 0.7vw;
+    left: 5.3vw;
+    height: 2vw;
+    width: 10vw;
+    padding: 0.8vw 1vw;
+}
+
 .stream-div {
     position: absolute;
     top: 0.7vw;
@@ -241,25 +250,43 @@ body {
     vertical-align: middle;
     width: 22.8vw;
     padding: 0.8vw 1vw;
+    font-family: text;
+    font-size: 0.9vw;
     color: var(--clr-surface-a70);
     text-align: end;
 }
 
-.modelSelect label {
+.modelSelect label,
+.tokensSelect label {
     position: absolute;
     bottom: 0.8vw;
     left: 1.2vw;
     height: 1.7vw;
     font-family: text;
     font-size: 0.9vw;
-    color: var(--clr-surface-a90);
+    color: var(--clr-surface-a70);
 }
 
-.dropdown {
+.dropdown-model {
     position: absolute;
     right: 1vw;
     bottom: 0.8vw;
     width: 17vw;
+    height: 4vh;
+    color: var(--clr-surface-a80);
+    background-color: var(--clr-surface-a10);
+    border: 1px solid var(--clr-surface-a30);
+    border-radius: 0.5vw;
+    font-family: text;
+    font-size: 0.9vw;
+    user-select: none;
+}
+
+.dropdown-tokens {
+    position: absolute;
+    right: 1vw;
+    bottom: 0.8vw;
+    width: 4vw;
     height: 4vh;
     color: var(--clr-surface-a80);
     background-color: var(--clr-surface-a10);

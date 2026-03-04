@@ -18,9 +18,45 @@
             <input type="checkbox" id="streamToggle" />
         </label>
     </div>
+
+    <div class="tokensSelect">
+        <label>Tokens</label>
+        <div id="tokensDropdown" class="dropdown-tokens">
+            <div id="selectedTokens" class="dropdown-selected">
+                3K
+            </div>
+            <div id="tokensOptions" class="dropdown-options hidden">
+                <div data-value="1024">
+                    1K
+                </div>
+                <div data-value="2048">
+                    2K
+                </div>
+                <div data-value="3072">
+                    3K
+                </div>
+                <div data-value="4096">
+                    4K
+                </div>
+                <div data-value="5120">
+                    5K
+                </div>
+                <div data-value="6144">
+                    6K
+                </div>
+                <div data-value="7168">
+                    7K
+                </div>
+                <div data-value="8192">
+                    8K
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modelSelect">
-        <label>Model:</label>
-        <div id="modelDropdown" class="dropdown">
+        <label>Model</label>
+        <div id="modelDropdown" class="dropdown-model">
             <div id="selectedModel" class="dropdown-selected">
                 llama3.2:1b
             </div>
