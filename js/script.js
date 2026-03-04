@@ -8,6 +8,7 @@ let sendBtn;
 let clearBtn;
 let isDragging = false;
 let attachedBase64 = null;
+let streamToggle;
 
 function trimMemory() {
     if (messages.length > MAX_MESSAGES) {
@@ -65,6 +66,7 @@ function setLoading(isLoading) {
 }
 
 async function sendMessage() {
+    if (sendBtn.disabled) return;
     const text = userInput.value.trim();
     if (!text) return;
 
@@ -195,21 +197,13 @@ async function sendMessage() {
     }
 }
 
-function updateAttachButton() {
-    if (attachedBase64 == null) {
-        attachBtn.textContent = "+";
-    } else {
-        attachBtn.textContent = "×";
-    }
-}
-
 function init() {
     chatHistory = document.getElementById("chatHistory");
     userInput = document.getElementById("userInput");
     sendBtn = document.getElementById("sendBtn");
     clearBtn = document.getElementById("clearBtn");
     attachBtn = document.getElementById('attachBtn');
-    updateAttachButton();
+    attachBtn.textContent = "+";
 
     const fileInput = document.getElementById('fileInput');
     const fileNameDisplay = document.getElementById('fileName');
@@ -219,7 +213,7 @@ function init() {
             fileInput.value = "";
             fileNameDisplay.textContent = "";
             fileNameDisplay.style.display = "none";
-            updateAttachButton();
+            attachBtn.textContent = "+";
             return;
         }
         fileInput.click();
@@ -233,7 +227,7 @@ function init() {
         const reader = new FileReader();
         reader.onload = () => {
             attachedBase64 = reader.result.split(',')[1];
-            updateAttachButton();
+            attachBtn.textContent = "×";
         };
 
         reader.readAsDataURL(file);
@@ -327,7 +321,7 @@ function init() {
         }
     });
 
-    const streamToggle = document.getElementById("streamToggle");
+    streamToggle = document.getElementById("streamToggle");
 
     const savedStream = localStorage.getItem("streamEnabled");
     if (savedStream !== null) {
