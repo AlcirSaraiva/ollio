@@ -1,11 +1,9 @@
 @charset "utf-8";
 
 :root {
-    /** Base colors */
     --clr-dark-a0: #000000;
     --clr-light-a0: #ffffff;
 
-    /** Theme primary colors */
     --clr-primary-a0: #38baf2;
     --clr-primary-a10: #5cc2f4;
     --clr-primary-a20: #77c9f5;
@@ -13,7 +11,6 @@
     --clr-primary-a40: #a3d8f8;
     --clr-primary-a50: #b7e0fa;
 
-    /** Theme surface colors */
     --clr-surface-a0: #121212;
     --clr-surface-a10: #282828;
     --clr-surface-a20: #3f3f3f;
@@ -25,7 +22,6 @@
     --clr-surface-a80: #d8d8d8;
     --clr-surface-a90: #f1f1f1;
 
-    /** Theme tonal surface colors */
     --clr-surface-tonal-a0: #1a2125;
     --clr-surface-tonal-a10: #2f3639;
     --clr-surface-tonal-a20: #464c4f;
@@ -33,22 +29,18 @@
     --clr-surface-tonal-a40: #767b7e;
     --clr-surface-tonal-a50: #909496;
 
-    /** Success colors */
     --clr-success-a0: #22946e;
     --clr-success-a10: #47d5a6;
     --clr-success-a20: #9ae8ce;
 
-    /** Warning colors */
     --clr-warning-a0: #a87a2a;
     --clr-warning-a10: #d7ac61;
     --clr-warning-a20: #ecd7b2;
 
-    /** Danger colors */
     --clr-danger-a0: #9c2121;
     --clr-danger-a10: #d94a4a;
     --clr-danger-a20: #eb9e9e;
 
-    /** Info colors */
     --clr-info-a0: #21498a;
     --clr-info-a10: #4077d1;
     --clr-info-a20: #759bd8;
@@ -138,6 +130,10 @@ body {
 
 .message p:first-child {
     margin-top: 0;
+}
+
+.message.user {
+    white-space: pre-wrap;
 }
 
 .user {
@@ -389,7 +385,6 @@ body {
     right: 76.2vw;
     font-family: text;
     font-size: 0.85vw;
-    
     color: var(--clr-surface-a70);
     text-decoration: none;
     font-weight: normal;
