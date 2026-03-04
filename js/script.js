@@ -9,6 +9,7 @@ let clearBtn;
 let isDragging = false;
 let attachedBase64 = null;
 let streamToggle;
+let currentController = null;
 
 function trimMemory() {
     if (messages.length > MAX_MESSAGES) {
@@ -61,12 +62,16 @@ function addMessage(role, text, className = "") {
 
 function setLoading(isLoading) {
     userInput.disabled = isLoading;
-    sendBtn.disabled = isLoading;
-    sendBtn.textContent = isLoading ? "…" : "Send";
+    sendBtn.disabled = false;
+    sendBtn.textContent = isLoading ? "Cancel" : "Send";
 }
 
 async function sendMessage() {
-    if (sendBtn.disabled) return;
+    if (currentController) {
+        currentController.abort();
+        return;
+    }
+
     const text = userInput.value.trim();
     if (!text) return;
 
@@ -105,6 +110,8 @@ async function sendMessage() {
 
     setLoading(true);
 
+    currentController = new AbortController();
+
     try {
         const response = await fetch("http://localhost:11434/api/chat", {
             method: "POST",
@@ -115,7 +122,8 @@ async function sendMessage() {
                 model: selectedModel,
                 messages: messages,
                 stream: isStreaming
-            })
+            }),
+            signal: currentController.signal
         });
 
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -131,6 +139,7 @@ async function sendMessage() {
                     value,
                     done
                 } = await reader.read();
+                if (currentController.signal.aborted) break;
                 if (done) break;
 
                 buffer += decoder.decode(value, {
@@ -189,9 +198,16 @@ async function sendMessage() {
         }
 
     } catch (err) {
-        typingMessage.textContent = `AI: ⚠️ Error: ${err.message}`;
-        console.error("Request failed:", err);
+        if (err.name === "AbortError") {
+            typingMessage.classList.remove("typing");
+            typingMessage.querySelector(".content").innerHTML +=
+                "\n\n*Response cancelled.*";
+        } else {
+            typingMessage.textContent = `AI: ⚠️ Error: ${err.message}`;
+            console.error("Request failed:", err);
+        }
     } finally {
+        currentController = null;
         typingMessage.classList.remove("typing");
         setLoading(false);
     }
