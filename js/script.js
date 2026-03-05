@@ -635,6 +635,7 @@ function init() {
         newBtn.addEventListener("click", startNewConversation);
     }
 
+    startNewConversation();
     renderSavedList();
     renderModelsList();
 }
