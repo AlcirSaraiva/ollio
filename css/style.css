@@ -277,6 +277,7 @@ body {
     font-family: text;
     font-size: 0.9vw;
     user-select: none;
+    
 }
 
 .dropdown-tokens {
@@ -300,6 +301,9 @@ body {
     padding: 0.6vw 0.7vw;
     font-family: text;
     font-size: 0.9vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .dropdown-options {
