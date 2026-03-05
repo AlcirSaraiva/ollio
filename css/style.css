@@ -369,7 +369,7 @@ body {
 
 .saved-title {
     position: absolute;
-    top: 48vh;
+    top: 48.6vh;
     left: 1.3vw;
     font-family: text;
     font-size: 0.85vw;
@@ -380,11 +380,11 @@ body {
 
 .new-conversation {
     position: absolute;
-    top: 48vh;
+    top: 48.6vh;
     width: auto;
-    right: 76.2vw;
+    right: 76.5vw;
     font-family: text;
-    font-size: 0.85vw;
+    font-size: 0.8vw;
     color: var(--clr-surface-a70);
     text-decoration: none;
     font-weight: normal;
@@ -406,7 +406,7 @@ body {
     padding: 1vw;
     font-family: text;
     font-size: 0.8vw;
-    color: var(--clr-surface-a80);
+    color: var(--clr-surface-a50);
 }
 
 .saved-item {
@@ -418,11 +418,12 @@ body {
     padding: 0.3vw;
     border-radius: 0.3vw;
     line-height: 1.1vw;
+    border: 1px solid var(--clr-surface-a10);
 }
 
-
 .saved-item:hover {
-    background-color: var(--clr-surface-a20);
+    color: var(--clr-surface-a70);
+    background-color: var(--clr-surface-a10);
 }
 
 .active-conversation {
