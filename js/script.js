@@ -282,7 +282,10 @@ function addMessage(role, text, className = "", isNew = false) {
             const contentDiv = div.querySelector(".content");
             textToCopy = contentDiv ? contentDiv.innerText : "";
         } else {
-            textToCopy = div.innerText.replace(/^You:\s*/, "");
+            const textNode = [...div.childNodes]
+                .find(node => node.nodeType === Node.TEXT_NODE);
+
+            textToCopy = textNode ? textNode.textContent.replace(/^You:\s*/, "").trim() : "";
         }
 
         try {
