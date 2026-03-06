@@ -195,8 +195,9 @@ function loadConversation(id) {
     messages = [...conv.messages];
 
     chatHistory.innerHTML = "";
+
     messages.forEach(msg => {
-        addMessage(msg.role, msg.content);
+        addMessage(msg.role, msg.content, "", false, msg.model);
     });
 }
 
@@ -251,20 +252,19 @@ function cleanResponse(text) {
     return t.trim();
 }
 
-function addMessage(role, text, className = "", isNew = false) {
+function addMessage(role, text, className = "", isNew = false, modelUsed = null) {
     const div = document.createElement("div");
     div.className = `message ${role} ${className}`;
 
     if (role === "assistant") {
         const label = document.createElement("span");
-        label.textContent = "AI: ";
+        const modelName = modelUsed || selectedModel || document.getElementById("selectedModel").textContent || "AI";
+        label.textContent = `${modelName}: `;
         label.className = "label";
 
         const content = document.createElement("div");
         content.className = "content";
-        content.innerHTML = cleanResponse(
-            DOMPurify.sanitize(marked.parse(text))
-        );
+        content.innerHTML = cleanResponse(DOMPurify.sanitize(marked.parse(text)));
 
         div.appendChild(label);
         div.appendChild(content);
@@ -371,10 +371,11 @@ async function sendMessage() {
     const isStreaming = streamToggle.checked;
     let typingMessage;
 
+    const modelAtRequest = selectedModel; // capture model before sending
     if (isStreaming) {
-        typingMessage = addMessage("assistant", "Thinking…", "typing");
+        typingMessage = addMessage("assistant", "Thinking…", "typing", false, modelAtRequest);
     } else {
-        typingMessage = addMessage("assistant", "Typing…", "typing");
+        typingMessage = addMessage("assistant", "Typing…", "typing", false, modelAtRequest);
     }
 
     setLoading(true);
@@ -449,12 +450,12 @@ async function sendMessage() {
                 chatHistory.removeChild(typingMessage);
 
                 // add new AI message with timestamp
-                addMessage("assistant", finalText, "", true);
-
+                addMessage("assistant", finalText, "", true, modelAtRequest);
 
                 messages.push({
                     role: "assistant",
-                    content: finalText
+                    content: finalText,
+                    model: selectedModel
                 });
                 trimMemoryByTokens();
                 persistCurrentConversation();
@@ -473,7 +474,8 @@ async function sendMessage() {
 
             messages.push({
                 role: "assistant",
-                content: aiMessage
+                content: aiMessage,
+                model: selectedModel
             });
             trimMemoryByTokens();
             persistCurrentConversation();
