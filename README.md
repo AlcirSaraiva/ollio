@@ -1,0 +1,151 @@
+# Ollio - UI for Ollama
+
+A clean, modern web interface for interacting with [Ollama](https://ollama.ai/) - a tool for running large language models locally.
+
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Ollama](https://img.shields.io/badge/Ollama-API-green.svg)
+
+## Features
+
+- 💬 **Chat Interface** - Clean, responsive chat UI for conversing with AI models
+- 🔄 **Streaming Support** - Toggle real-time streaming responses on/off
+- 🎯 **Model Selection** - Choose from all available Ollama models installed locally
+- 📁 **Conversation Management** - Save, load, and delete conversations with localStorage persistence
+- 🖼️ **Image Support** - Attach and send images for multimodal model interactions
+- 🎨 **Dark Theme** - Beautiful dark mode interface with custom color palette
+- ⚡ **Token Management** - Configure max tokens (1K-8K) to control context window
+- 📝 **Markdown Rendering** - Formatted responses with syntax highlighting using Marked.js
+- 🛡️ **XSS Protection** - Sanitized output with DOMPurify
+- 📱 **Responsive Design** - Works on desktop and mobile browsers
+
+## Project Structure
+
+```
+ollio/
+├── index.html          # Main HTML structure
+├── css/
+│   └── style.css       # Custom dark theme styles
+├── js/
+│   └── script.js       # Application logic and Ollama API integration
+└── README.md           # This file
+```
+
+## Prerequisites
+
+1. **Ollama installed** - Download from [ollama.ai](https://ollama.ai)
+2. **At least one model** - Pull a model using `ollama pull <model-name>`
+   - Example: `ollama pull llama3.2` or `ollama pull mistral`
+3. **Ollama running** - Start Ollama server with `ollama serve`
+
+## Installation
+
+1. Clone or download this repository
+2. Open `index.html` in your web browser
+3. The interface will automatically connect to `http://localhost:11434`
+
+> **Note**: This is a static web application - no build process or server required!
+
+## Usage
+
+### Basic Chat
+1. Select a model from the dropdown menu
+2. Type your message in the input area
+3. Click **Send** or press Enter
+4. View the AI's response in the chat history
+
+### Conversation Management
+- **New Conversation**: Click the "New" button to start a fresh chat
+- **Saved Conversations**: Previous chats are automatically saved and listed on the left
+- **Load Conversation**: Click any saved conversation to resume
+- **Delete**: Hover over a saved conversation and click the × button to delete
+
+### Settings
+- **Stream Toggle**: Enable/disable streaming responses in real-time
+- **Tokens**: Select context window size (1024-8192 tokens)
+- **Model**: Choose which Ollama model to use
+
+### Image Attachments
+1. Click the **+** button next to the input field
+2. Select an image file
+3. Send your message with the attached image
+4. Works with multimodal models like LLaVA
+
+## API Configuration
+
+The application connects to Ollama's default API endpoint:
+- **Base URL**: `http://localhost:11434`
+- **Models Endpoint**: `/api/tags`
+- **Chat Endpoint**: `/api/chat`
+
+To use a different Ollama instance, modify the fetch URLs in `js/script.js`.
+
+## Technologies Used
+
+- **HTML5** - Semantic markup structure
+- **CSS3** - Custom dark theme with CSS variables
+- **Vanilla JavaScript** - No frameworks, pure ES6+
+- **Marked.js** - Markdown parsing and rendering
+- **DOMPurify** - HTML sanitization for security
+- **localStorage** - Persistent conversation storage
+
+## Customization
+
+### Theme Colors
+Edit CSS variables in `css/style.css`:
+
+```css
+:root {
+    --clr-primary-a0: #38baf2;    /* Primary accent */
+    --clr-surface-a0: #121212;    /* Background */
+    /* ... more variables */
+}
+```
+
+### Token Limits
+Modify the `MAX_TOKENS` variable in `js/script.js` to change default token limit.
+
+### API Endpoint
+Update the fetch URLs in `js/script.js` if Ollama is running on a different host/port.
+
+## Browser Compatibility
+
+- ✅ Chrome/Edge (recommended)
+- ✅ Firefox
+- ✅ Safari
+- ✅ Opera
+
+## Security Notes
+
+- All data is stored locally in browser localStorage
+- No data is sent to external servers (only to your local Ollama instance)
+- DOMPurify sanitizes all markdown output to prevent XSS attacks
+- Image attachments are converted to base64 and stored locally
+
+## Troubleshooting
+
+**Models not loading?**
+- Ensure Ollama is running: `ollama serve`
+- Check browser console for CORS errors
+- Verify Ollama API is accessible at `http://localhost:11434`
+
+**Conversations not saving?**
+- Check if localStorage is enabled in your browser
+- Ensure you're not in incognito/private mode
+
+**Images not working?**
+- Use a multimodal model (e.g., `llava`, `bakllava`)
+- Check file size limits in Ollama configuration
+
+## License
+
+MIT License - feel free to use, modify, and distribute.
+
+## Acknowledgments
+
+- [Ollama](https://ollama.ai) - Local LLM runtime
+- [Marked.js](https://marked.js.org/) - Markdown parser
+- [DOMPurify](https://github.com/cure53/DOMPurify) - HTML sanitizer
+
+---
+
+**Enjoy chatting with your local AI models! 🚀**
