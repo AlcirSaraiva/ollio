@@ -138,6 +138,10 @@ ollio/
 - [Marked.js](https://marked.js.org/) - Markdown parser
 - [DOMPurify](https://github.com/cure53/DOMPurify) - HTML sanitizer
 
+## License
+
+MIT License - feel free to use, modify, and distribute.
+
 ---
 
 **Enjoy chatting with your local AI models! 🚀**
