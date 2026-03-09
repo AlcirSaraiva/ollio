@@ -40,10 +40,38 @@ ollio/
 ## Installation
 
 1. Clone or download this repository
-2. Open `index.html` in your web browser
-3. The interface will automatically connect to `http://localhost:11434`
+2. Start a local web server (required to avoid CORS errors):
 
-> **Note**: This is a static web application - no build process or server required!
+   **Option A: Python HTTP Server**
+   ```bash
+   # Navigate to the project directory
+   cd ollio
+   
+   # Start Python HTTP server on port 8000
+   python3 -m http.server 8000
+   ```
+
+   **Option B: Create a Shell Script** (for quick access)
+   Create a file named `start.sh`:
+   ```bash
+   #!/bin/bash
+   cd /path/to/ollio/ || exit
+   python3 -m http.server 8000
+   ```
+   
+   Make it executable: `chmod +x start.sh`
+   
+   Run with: `./start.sh`
+
+   **Option C: Other Servers**
+   - Node.js: `npx http-server -p 8000`
+   - PHP: `php -S localhost:8000`
+   - VS Code: Use "Live Server" extension
+
+3. Open your browser and navigate to `http://localhost:8000`
+4. The interface will automatically connect to `http://localhost:11434`
+
+> **Note**: A local web server is required due to browser CORS security policies when making API requests to Ollama.
 
 ## Usage
 
