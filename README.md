@@ -5,6 +5,8 @@ A clean, modern web interface for interacting with [Ollama](https://ollama.ai/) 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Ollama](https://img.shields.io/badge/Ollama-API-green.svg)
 
+<img width="1280" height="720" alt="screenshot" src="https://github.com/user-attachments/assets/4c9e6c77-5f55-40b7-9fa6-7c964d1d4c8a" />
+
 ## Features
 
 - 💬 **Chat Interface** - Clean, responsive chat UI for conversing with AI models
