@@ -450,7 +450,9 @@ async function sendMessage() {
             if (!currentController?.signal.aborted) {
 
                 // remove placeholder typing div
-                chatHistory.removeChild(typingMessage);
+                if (typingMessage.parentNode === chatHistory) {
+                    chatHistory.removeChild(typingMessage);
+                }
 
                 // add new AI message with timestamp
                 addMessage("assistant", finalText, "", true, modelAtRequest);
@@ -470,7 +472,9 @@ async function sendMessage() {
             const aiMessage = data?.message?.content ?? "No response.";
 
             // remove the old typing placeholder
-            chatHistory.removeChild(typingMessage);
+            if (typingMessage.parentNode === chatHistory) {
+                chatHistory.removeChild(typingMessage);
+            }
 
             // add new AI message with timestamp
             addMessage("assistant", aiMessage, "", true);
