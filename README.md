@@ -16,15 +16,18 @@ A clean, modern web interface for interacting with [Ollama](https://ollama.ai/) 
 - ⚡ **Token Management** - Configure max tokens (1K-8K) to control context window
 - 📝 **Markdown Rendering** - Formatted responses with syntax highlighting using Marked.js
 - 🛡️ **XSS Protection** - Sanitized output with DOMPurify
-- 📱 **Responsive Design** - Works on desktop and mobile browsers
 
 ## Project Structure
 
 ```
 ollio/
 ├── index.html          # Main HTML structure
+├── ollio.png
+├── ollioimg.png
+├── favicon.png
 ├── css/
 │   └── style.css       # Custom dark theme styles
+│   └── cascadia-code   # Font used
 ├── js/
 │   └── script.js       # Application logic and Ollama API integration
 └── README.md           # This file
@@ -51,7 +54,7 @@ ollio/
    python3 -m http.server 8000
    ```
 
-   **Option B: Create a Shell Script** (for quick access)
+   **Option B: Create a Shell Script** (That's what I use)
    Create a file named `start.sh`:
    ```bash
    #!/bin/bash
@@ -61,7 +64,7 @@ ollio/
    
    Make it executable: `chmod +x start.sh`
    
-   Run with: `./start.sh`
+   Run with: `./start.sh` (you can set it to run on machine start)
 
    **Option C: Other Servers**
    - Node.js: `npx http-server -p 8000`
@@ -69,7 +72,7 @@ ollio/
    - VS Code: Use "Live Server" extension
 
 3. Open your browser and navigate to `http://localhost:8000`
-4. The interface will automatically connect to `http://localhost:11434`
+4. The interface will automatically connect to your Ollama `http://localhost:11434`
 
 > **Note**: A local web server is required due to browser CORS security policies when making API requests to Ollama.
 
