@@ -55,6 +55,7 @@ ollio/
    ```
 
    **Option B: Create a Shell Script** (That's what I use)
+   
    Create a file named `start.sh`:
    ```bash
    #!/bin/bash
