@@ -32,6 +32,7 @@ function renderModelsList() {
                 // Click event
                 option.addEventListener("click", () => {
                     selectedModelDiv.textContent = model.name;
+                    selectedModel = model.name;
                     localStorage.setItem("selectedModel", model.name);
                     modelOptionsDiv.classList.add("hidden");
                 });
@@ -41,9 +42,11 @@ function renderModelsList() {
                 // If it’s the first model OR matches saved selection, set as selected
                 if (index === 0 && !localStorage.getItem("selectedModel")) {
                     selectedModelDiv.textContent = model.name;
+                    selectedModel = model.name;
                     localStorage.setItem("selectedModel", model.name);
                 } else if (model.name === localStorage.getItem("selectedModel")) {
                     selectedModelDiv.textContent = model.name;
+                    selectedModel = model.name;
                 }
             });
         })
