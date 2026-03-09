@@ -132,10 +132,6 @@ ollio/
 - Use a multimodal model (e.g., `llava`, `llama3.2-vision`)
 - Check file size limits in Ollama configuration
 
-## License
-
-MIT License - feel free to use, modify, and distribute.
-
 ## Acknowledgments
 
 - [Ollama](https://ollama.ai) - Local LLM runtime
