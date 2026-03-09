@@ -54,7 +54,7 @@ ollio/
    python3 -m http.server 8000
    ```
 
-   **Option B: Create a Shell Script** (That's what I use)
+   **Option B: Create a Shell Script and make it run on boot** (that's what I use)
 
    Create a file named `start.sh`:
    ```bash
