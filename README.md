@@ -102,15 +102,6 @@ ollio/
 3. Send your message with the attached image
 4. Works with multimodal models like LLaVA or llama3.2-vision
 
-## API Configuration
-
-The application connects to Ollama's default API endpoint:
-- **Base URL**: `http://localhost:11434`
-- **Models Endpoint**: `/api/tags`
-- **Chat Endpoint**: `/api/chat`
-
-To use a different Ollama instance, modify the fetch URLs in `js/script.js`.
-
 ## Technologies Used
 
 - **HTML5** - Semantic markup structure
@@ -119,32 +110,6 @@ To use a different Ollama instance, modify the fetch URLs in `js/script.js`.
 - **Marked.js** - Markdown parsing and rendering
 - **DOMPurify** - HTML sanitization for security
 - **localStorage** - Persistent conversation storage
-
-## Customization
-
-### Theme Colors
-Edit CSS variables in `css/style.css`:
-
-```css
-:root {
-    --clr-primary-a0: #38baf2;    /* Primary accent */
-    --clr-surface-a0: #121212;    /* Background */
-    /* ... more variables */
-}
-```
-
-### Token Limits
-Modify the `MAX_TOKENS` variable in `js/script.js` to change default token limit.
-
-### API Endpoint
-Update the fetch URLs in `js/script.js` if Ollama is running on a different host/port.
-
-## Browser Compatibility
-
-- ✅ Chrome/Edge (recommended)
-- ✅ Firefox
-- ✅ Safari
-- ✅ Opera
 
 ## Security Notes
 
@@ -157,7 +122,6 @@ Update the fetch URLs in `js/script.js` if Ollama is running on a different host
 
 **Models not loading?**
 - Ensure Ollama is running: `ollama serve`
-- Check browser console for CORS errors
 - Verify Ollama API is accessible at `http://localhost:11434`
 
 **Conversations not saving?**
@@ -165,7 +129,7 @@ Update the fetch URLs in `js/script.js` if Ollama is running on a different host
 - Ensure you're not in incognito/private mode
 
 **Images not working?**
-- Use a multimodal model (e.g., `llava`, `bakllava`)
+- Use a multimodal model (e.g., `llava`, `llama3.2-vision`)
 - Check file size limits in Ollama configuration
 
 ## License
