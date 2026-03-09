@@ -210,13 +210,25 @@ body {
 
 .logo {
     position: absolute;
-    top: 1vw;
-    left: 1vw;
-    width: 2vw;
-    height: 2vw;
-    background-image: url(../ollama.png);
+    top: 1.6vw;
+    left: 1.2vw;
+    width: 3vw;
+    height: 3vw;
+    background-image: url(../ollio.png);
     background-repeat: no-repeat;
     background-position: left top;
+    background-size: contain;
+}
+
+.logoimg {
+    position: absolute;
+    bottom: 1.2vw;
+    left: 1.2vw;
+    width: 8vw;
+    height: 16vw;
+    background-image: url(../ollioimg.png);
+    background-repeat: no-repeat;
+    background-position: right bottom;
     background-size: contain;
 }
 
