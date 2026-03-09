@@ -55,7 +55,7 @@ ollio/
    ```
 
    **Option B: Create a Shell Script** (That's what I use)
-   
+
    Create a file named `start.sh`:
    ```bash
    #!/bin/bash
@@ -100,7 +100,7 @@ ollio/
 1. Click the **+** button next to the input field
 2. Select an image file
 3. Send your message with the attached image
-4. Works with multimodal models like LLaVA
+4. Works with multimodal models like LLaVA or llama3.2-vision
 
 ## API Configuration
 
