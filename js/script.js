@@ -17,19 +17,18 @@ function renderModelsList() {
     const selectedModelDiv = document.getElementById("selectedModel");
     const modelOptionsDiv = document.getElementById("modelOptions");
 
-    // Fetch models from Ollama API
+    // Fetch models from Ollama
     fetch("http://localhost:11434/api/tags")
         .then(res => res.json())
         .then(data => {
-            const models = data.models; // array of models
-            modelOptionsDiv.innerHTML = ""; // clear existing options
+            const models = data.models; 
+            modelOptionsDiv.innerHTML = ""; 
 
             models.forEach((model, index) => {
                 const option = document.createElement("div");
                 option.textContent = model.name;
                 option.dataset.value = model.name;
 
-                // Click event
                 option.addEventListener("click", () => {
                     selectedModelDiv.textContent = model.name;
                     selectedModel = model.name;
@@ -39,7 +38,6 @@ function renderModelsList() {
 
                 modelOptionsDiv.appendChild(option);
 
-                // If it’s the first model OR matches saved selection, set as selected
                 if (index === 0 && !localStorage.getItem("selectedModel")) {
                     selectedModelDiv.textContent = model.name;
                     selectedModel = model.name;
@@ -55,12 +53,10 @@ function renderModelsList() {
             selectedModelDiv.textContent = "Error loading models";
         });
 
-    // Toggle dropdown visibility
     selectedModelDiv.addEventListener("click", () => {
         modelOptionsDiv.classList.toggle("hidden");
     });
 
-    // Close dropdown if clicking outside
     document.addEventListener("click", (e) => {
         const modelDropdown = document.getElementById("modelDropdown");
         if (!modelDropdown.contains(e.target)) {
@@ -87,7 +83,6 @@ function renderSavedList() {
     }
 
     convArray.forEach(conv => {
-
         const item = document.createElement("div");
         item.classList.add("saved-item");
 
@@ -117,7 +112,6 @@ function renderSavedList() {
         textSpan.textContent = `${timestamp}\n${firstSentence}`;
         textSpan.style.whiteSpace = "pre";
 
-        // Right side: delete button
         const deleteBtn = document.createElement("a");
         deleteBtn.textContent = "×";
         deleteBtn.classList.add("delete-btn");
@@ -155,10 +149,8 @@ function estimateTokensFromText(text) {
 function estimateTokensFromMessage(msg) {
     let total = 0;
 
-    // text content
     total += estimateTokensFromText(msg.content);
 
-    // image base64 (VERY heavy)
     if (msg.images && Array.isArray(msg.images)) {
         for (const img of msg.images) {
             total += Math.ceil(img.length / 4);
@@ -374,7 +366,7 @@ async function sendMessage() {
     const isStreaming = streamToggle.checked;
     let typingMessage;
 
-    const modelAtRequest = selectedModel; // capture model before sending
+    const modelAtRequest = selectedModel;
     if (isStreaming) {
         typingMessage = addMessage("assistant", "Thinking…", "typing", false, modelAtRequest);
     } else {
@@ -404,7 +396,6 @@ async function sendMessage() {
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         if (isStreaming) {
-            // streaming mode
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
             let buffer = "";
@@ -421,7 +412,7 @@ async function sendMessage() {
                     stream: true
                 });
                 const lines = buffer.split("\n");
-                buffer = lines.pop(); // incomplete line
+                buffer = lines.pop();
 
                 for (const line of lines) {
                     if (!line.trim()) continue;
@@ -448,13 +439,10 @@ async function sendMessage() {
             // save final text to memory
             const finalText = typingMessage.dataset.raw || "";
             if (!currentController?.signal.aborted) {
-
-                // remove placeholder typing div
                 if (typingMessage.parentNode === chatHistory) {
                     chatHistory.removeChild(typingMessage);
                 }
 
-                // add new AI message with timestamp
                 addMessage("assistant", finalText, "", true, modelAtRequest);
 
                 messages.push({
@@ -471,12 +459,10 @@ async function sendMessage() {
             const data = await response.json();
             const aiMessage = data?.message?.content ?? "No response.";
 
-            // remove the old typing placeholder
             if (typingMessage.parentNode === chatHistory) {
                 chatHistory.removeChild(typingMessage);
             }
 
-            // add new AI message with timestamp
             addMessage("assistant", aiMessage, "", true);
 
             messages.push({
@@ -603,8 +589,6 @@ function init() {
         isDragging = false;
         document.body.style.cursor = "default";
         document.body.style.userSelect = "auto";
-        //const chatHistory = document.getElementById("chatHistory");
-        //chatHistory.scrollTop = chatHistory.scrollHeight;
     });
 
     document.addEventListener("mousemove", (e) => {
@@ -632,6 +616,8 @@ function init() {
     const savedStream = localStorage.getItem("streamEnabled");
     if (savedStream !== null) {
         streamToggle.checked = savedStream === "true";
+    } else {
+        streamToggle.checked = true;
     }
 
     streamToggle.addEventListener("change", () => {
