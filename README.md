@@ -91,6 +91,7 @@ ollio/
 - **New Conversation**: Click the "New" button to start a fresh chat
 - **Saved Conversations**: Previous chats are automatically saved and listed on the left
 - **Load Conversation**: Click any saved conversation to resume
+- **Download**: Hover over a saved conversation and click the ⇣ button to download
 - **Delete**: Hover over a saved conversation and click the × button to delete
 
 ### Settings

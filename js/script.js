@@ -112,9 +112,20 @@ function renderSavedList() {
         textSpan.textContent = `${timestamp}\n${firstSentence}`;
         textSpan.style.whiteSpace = "pre";
 
+        const downloadBtn = document.createElement("a");
+        downloadBtn.textContent = "⇣";
+        downloadBtn.classList.add("download-btn");
+        downloadBtn.title = "Download conversation";
+
+        downloadBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            downloadConversation(conv.id);
+        });
+
         const deleteBtn = document.createElement("a");
         deleteBtn.textContent = "×";
         deleteBtn.classList.add("delete-btn");
+        deleteBtn.title = "Delete conversation";
 
         deleteBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -126,8 +137,13 @@ function renderSavedList() {
             renderSavedList();
         });
 
+        const buttonGroup = document.createElement("div");
+        buttonGroup.classList.add("button-group");
+        buttonGroup.appendChild(downloadBtn);
+        buttonGroup.appendChild(deleteBtn);
+
         item.appendChild(textSpan);
-        item.appendChild(deleteBtn);
+        item.appendChild(buttonGroup);
 
         savedList.appendChild(item);
     });
@@ -198,6 +214,36 @@ function loadConversation(id) {
 
 function saveConversations() {
     localStorage.setItem("conversations", JSON.stringify(conversations));
+}
+
+function downloadConversation(id) {
+    const conv = conversations[id];
+    if (!conv) return;
+
+    const downloadDate = new Date();
+    const timestamp = downloadDate.toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }) + ' ' + downloadDate.toLocaleTimeString(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+
+    const markdownContent = `## Conversation - ${timestamp}\n\n${conv.messages.map(msg => {
+        const role = msg.role === 'assistant' && msg.model ? msg.model : msg.role;
+        return `**${role}**:\n\n${msg.content}\n\n`;
+    }).join('---\n\n')}`;
+    
+    const blob = new Blob([markdownContent], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `conversation-${id}-${Date.now()}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 function deleteConversation(id) {
@@ -496,6 +542,7 @@ function init() {
     sendBtn = document.getElementById("sendBtn");
     const attachBtn = document.getElementById('attachBtn');
     attachBtn.textContent = "+";
+    attachBtn.title = "Attach an image (model must offer support)";
 
     const fileInput = document.getElementById('fileInput');
     const fileNameDisplay = document.getElementById('fileName');
@@ -629,6 +676,7 @@ function init() {
     });
 
     const newBtn = document.querySelector(".new-conversation");
+    newBtn.title = "Start a new conversation";
     if (newBtn) {
         newBtn.addEventListener("click", startNewConversation);
     }

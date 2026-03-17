@@ -427,14 +427,26 @@ body {
 
 .saved-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     cursor: pointer;
     margin-bottom: 0.5vw;
-    padding: 0.3vw;
+    padding-top: 0.3vw;
+    padding-bottom: 0.3vw;
+    padding-right: 0.6vw;
+    padding-left: 0.6vw;
     border-radius: 0.3vw;
     line-height: 1.1vw;
     border: 1px solid var(--clr-surface-a10);
+}
+
+.saved-item span {
+    flex: 1;
+}
+
+.saved-item .button-group {
+    display: flex;
+    gap: 0.5vw;
+    margin-left: auto;
 }
 
 .saved-item:hover {
@@ -452,10 +464,20 @@ body {
     transition: opacity 0.2s;
     text-decoration: none;
     color: red;
-    margin-left: 1vw;
+    margin-left: 0.2vw;
+    padding: 5px;
 }
 
-.saved-item:hover .delete-btn {
+.saved-item .download-btn {
+    opacity: 0;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    color: greenyellow;
+    padding: 5px;
+}
+
+.saved-item:hover .delete-btn,
+.saved-item:hover .download-btn {
     opacity: 1;
 }
 
