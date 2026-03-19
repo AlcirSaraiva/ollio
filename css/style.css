@@ -53,7 +53,7 @@
 }
 
 body {
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
     background: var(--clr-surface-a0);
     margin: 0;
@@ -156,7 +156,7 @@ body {
 }
 
 .input-area .file-name {
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
     color: var(--clr-warning-a20);
     max-width: 20vw;
@@ -172,7 +172,7 @@ body {
     resize: none;
     overflow-y: auto;
     padding: 10px;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
     color: var(--clr-light-a0);
     background-color: var(--clr-surface-a0);
@@ -184,7 +184,7 @@ body {
 
 .input-area button {
     padding: 10px 16px;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
     cursor: pointer;
     background-color: var(--clr-info-a20);
@@ -259,7 +259,7 @@ body {
     vertical-align: middle;
     width: 22.8vw;
     padding: 0.8vw 1vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.9vw;
     color: var(--clr-surface-a70);
     text-align: end;
@@ -271,7 +271,7 @@ body {
     bottom: 0.8vw;
     left: 1.2vw;
     height: 1.7vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.9vw;
     color: var(--clr-surface-a70);
 }
@@ -286,7 +286,7 @@ body {
     background-color: var(--clr-surface-a10);
     border: 1px solid var(--clr-surface-a30);
     border-radius: 0.5vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.9vw;
     user-select: none;
     
@@ -302,7 +302,7 @@ body {
     background-color: var(--clr-surface-a10);
     border: 1px solid var(--clr-surface-a30);
     border-radius: 0.5vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.9vw;
     user-select: none;
 }
@@ -311,7 +311,7 @@ body {
     color: var(--clr-surface-a90);
     cursor: pointer;
     padding: 0.6vw 0.7vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.9vw;
     white-space: nowrap;
     overflow: hidden;
@@ -330,7 +330,7 @@ body {
     z-index: 1000;
     border-radius: 0.5vw;
     line-height: 1.3;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
 }
 
@@ -362,7 +362,7 @@ body {
     position: absolute;
     bottom: -0.9vw;
     right: 0vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.51vw;
     color: var(--clr-primary-a50);
     pointer-events: none;
@@ -372,7 +372,7 @@ body {
     position: absolute;
     top: 0.1vw;
     right: 0.3vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.51vw;
     color: var(--clr-surface-a30);
     cursor: pointer;
@@ -387,7 +387,7 @@ body {
     position: absolute;
     top: 48.6vh;
     left: 1.3vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.85vw;
     font-weight: bold;
     color: var(--clr-surface-a70);
@@ -399,7 +399,7 @@ body {
     top: 48.6vh;
     width: auto;
     right: 76.5vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
     color: var(--clr-surface-a70);
     text-decoration: none;
@@ -420,7 +420,7 @@ body {
     bottom: 0;
     overflow-y: auto;
     padding: 1vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.8vw;
     color: var(--clr-surface-a50);
 }
@@ -488,7 +488,7 @@ body {
     right: 0;
     width: 22.8vw;
     padding: 1vw;
-    font-family: text;
+    font-family: text, system-ui, monospace;
     font-size: 0.5vw;
     color: var(--clr-warning-a20);
     overflow-y: auto;
