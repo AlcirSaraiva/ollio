@@ -100,6 +100,8 @@ function renderSavedList() {
             `${String(date.getMinutes()).padStart(2,'0')}`;
 
         let firstSentence = "";
+        let totalTokens = 0;
+        
         if (conv.messages && conv.messages.length > 0) {
             const msg = conv.messages[0].content || "";
             const periodIndex = msg.indexOf(".");
@@ -107,8 +109,14 @@ function renderSavedList() {
                 msg.slice(0, periodIndex + 1) :
                 msg;
             if (firstSentence.length > 30) firstSentence = firstSentence.slice(0, 40) + "…";
+            
+            totalTokens = conv.messages.reduce((sum, message) => {
+                return sum + estimateTokensFromMessage(message);
+            }, 0);
         }
 
+        const tokenInfo = `${totalTokens} total tokens in conversation`;
+        textSpan.title = `${tokenInfo}`;
         textSpan.textContent = `${timestamp}\n${firstSentence}`;
         textSpan.style.whiteSpace = "pre";
 
@@ -159,7 +167,37 @@ function setLoading(isLoading) {
 
 function estimateTokensFromText(text) {
     if (!text) return 0;
-    return Math.ceil(text.length / 4);
+    
+    const normalized = text.trim();
+    if (!normalized) return 0;
+    
+    const words = normalized.split(/\s+/);
+    let tokenCount = 0;
+    for (const word of words) {
+        if (!word) continue;
+        tokenCount += 1;
+        // subword tokenization
+        if (word.length > 4) {
+            tokenCount += Math.ceil((word.length - 4) / 3);
+        }
+        
+        const punctuation = word.match(/[^\w\s]/g);
+        if (punctuation) {
+            tokenCount += punctuation.length;
+        }
+        
+        if (/\d/.test(word)) {
+            tokenCount += 1;
+        }
+    }
+    
+    const newlines = (text.match(/\n/g) || []).length;
+    tokenCount += newlines;
+    
+    // overhead for special tokens
+    tokenCount += 2;
+    
+    return Math.ceil(tokenCount);
 }
 
 function estimateTokensFromMessage(msg) {
@@ -169,31 +207,38 @@ function estimateTokensFromMessage(msg) {
 
     if (msg.images && Array.isArray(msg.images)) {
         for (const img of msg.images) {
-            total += Math.ceil(img.length / 4);
+            total += Math.ceil(img.length / 3);
         }
     }
+
+    // overhead for message structure
+    total += 5;
 
     return total;
 }
 
-function trimMemoryByTokens(maxTokens = MAX_TOKENS) {
-    let total = 0;
+function buildLimitedContext(messagesArray = messages, maxTokens = MAX_TOKENS) {
+    const calculateTotalTokens = (msgArray) => {
+        return msgArray.reduce((sum, msg) => sum + estimateTokensFromMessage(msg), 0);
+    };
 
-    for (let i = messages.length - 1; i >= 0; i--) {
-        total += estimateTokensFromMessage(messages[i]);
+    const limitedContext = [...messagesArray];
+    let totalTokens = calculateTotalTokens(limitedContext);
 
-        if (total > maxTokens) {
-            const firstSystemIndex = messages.findIndex(m => m.role === "system");
-
-            if (firstSystemIndex !== -1 && firstSystemIndex < i) {
-                messages.splice(firstSystemIndex + 1, i - firstSystemIndex - 1);
-            } else {
-                messages.splice(0, i);
-            }
-
-            break;
-        }
+    if (totalTokens <= maxTokens) {
+        return limitedContext;
     }
+
+    const systemIndex = limitedContext.findIndex(m => m.role === "system");
+    const startTrimIndex = systemIndex !== -1 ? systemIndex + 1 : 0;
+
+    while (totalTokens > maxTokens && limitedContext.length > startTrimIndex) {
+        const removedMsg = limitedContext.splice(startTrimIndex, 1)[0];
+        const removedTokens = estimateTokensFromMessage(removedMsg);
+        totalTokens -= removedTokens;
+    }
+
+    return limitedContext;
 }
 
 // Message Handling
@@ -397,7 +442,6 @@ async function sendMessage() {
     }
 
     messages.push(userMessage);
-    trimMemoryByTokens();
     persistCurrentConversation();
 
     renderSavedList();
@@ -426,6 +470,10 @@ async function sendMessage() {
     selectedModel = document.getElementById("selectedModel").textContent;
 
     try {
+        const limitedContext = buildLimitedContext();
+        const tokensSent = limitedContext.reduce((sum, msg) => sum + estimateTokensFromMessage(msg), 0);
+        console.log(`Sending ${tokensSent} tokens to API (${limitedContext.length} messages)`);
+        
         const response = await fetch("http://localhost:11434/api/chat", {
             method: "POST",
             headers: {
@@ -433,7 +481,7 @@ async function sendMessage() {
             },
             body: JSON.stringify({
                 model: selectedModel,
-                messages: messages,
+                messages: limitedContext,
                 stream: isStreaming
             }),
             signal: currentController.signal
@@ -496,8 +544,8 @@ async function sendMessage() {
                     content: finalText,
                     model: selectedModel
                 });
-                trimMemoryByTokens();
                 persistCurrentConversation();
+                renderSavedList();
             }
 
         } else {
@@ -516,8 +564,8 @@ async function sendMessage() {
                 content: aiMessage,
                 model: selectedModel
             });
-            trimMemoryByTokens();
             persistCurrentConversation();
+            renderSavedList();
         }
     } catch (err) {
         if (err.name === "AbortError") {
@@ -596,7 +644,6 @@ function init() {
             MAX_TOKENS = parseInt(option.dataset.value, 10);
             selectedTokensDiv.textContent = option.textContent;
             localStorage.setItem("MAX_TOKENS", MAX_TOKENS);
-            trimMemoryByTokens();
             persistCurrentConversation();
             tokensOptionsDiv.classList.add("hidden");
         });
