@@ -38,11 +38,15 @@ function renderModelsList() {
 
                 modelOptionsDiv.appendChild(option);
 
+                // Select first model if no model is saved in localStorage
                 if (index === 0 && !localStorage.getItem("selectedModel")) {
                     selectedModelDiv.textContent = model.name;
                     selectedModel = model.name;
                     localStorage.setItem("selectedModel", model.name);
-                } else if (model.name === localStorage.getItem("selectedModel")) {
+                }
+                
+                // Restore saved model from localStorage
+                if (model.name === localStorage.getItem("selectedModel")) {
                     selectedModelDiv.textContent = model.name;
                     selectedModel = model.name;
                 }
@@ -131,7 +135,7 @@ function renderSavedList() {
         });
 
         const deleteBtn = document.createElement("a");
-        deleteBtn.textContent = "×";
+        deleteBtn.textContent = "X";
         deleteBtn.classList.add("delete-btn");
         deleteBtn.title = "Delete conversation";
 
@@ -487,7 +491,21 @@ async function sendMessage() {
             signal: currentController.signal
         });
 
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) {
+            const statusMessages = {
+                400: "Bad Request: Invalid parameters or malformed JSON",
+                404: "Not Found: The requested model does not exist",
+                429: "Too Many Requests: Rate limit exceeded",
+                500: "Internal Server Error: Ollama server encountered an error",
+                502: "Bad Gateway: Unable to reach the model service"
+            };
+            
+            const defaultMessage = `Server Error: HTTP ${response.status}`;
+            const errorMessage = statusMessages[response.status] || defaultMessage;
+            
+            console.error(`API Error ${response.status}:`, errorMessage);
+            throw new Error(errorMessage);
+        }
 
         if (isStreaming) {
             const reader = response.body.getReader();
