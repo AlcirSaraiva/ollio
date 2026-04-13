@@ -15,7 +15,7 @@ A clean, modern web interface for interacting with [Ollama](https://ollama.ai/) 
 - 📁 **Conversation Management** - Save, load, and delete conversations with localStorage persistence
 - 🖼️ **Image Support** - Attach and send images for multimodal model interactions
 - 🎨 **Dark Theme** - Beautiful dark mode interface with custom color palette
-- ⚡ **Token Management** - Configure max tokens (1K-200K) to control context window
+- ⚡ **Token Management** - Configure max tokens (1K-2M) to control context window
 - 📝 **Markdown Rendering** - Formatted responses with syntax highlighting using Marked.js
 - 🛡️ **XSS Protection** - Sanitized output with DOMPurify
 
