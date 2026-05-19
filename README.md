@@ -96,7 +96,7 @@ ollio/
 
 ### Settings
 - **Stream Toggle**: Enable/disable streaming responses in real-time
-- **Tokens**: Select context window size (1024-8192 tokens)
+- **Tokens**: Select context window size (1024-2048000 tokens)
 - **Model**: Choose which Ollama model to use
 
 ### Image Attachments

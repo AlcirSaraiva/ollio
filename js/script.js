@@ -610,6 +610,11 @@ function init() {
     attachBtn.textContent = "+";
     attachBtn.title = "Attach an image (model must offer support)";
 
+    const logoDiv = document.getElementById("logo");
+    logoDiv.addEventListener("click", () => {
+        window.open("https://github.com/AlcirSaraiva/ollio", "_blank");
+    });
+
     const fileInput = document.getElementById('fileInput');
     const fileNameDisplay = document.getElementById('fileName');
     attachBtn.addEventListener('click', () => {

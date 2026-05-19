@@ -213,11 +213,13 @@ body {
     top: 1.6vw;
     left: 1.2vw;
     width: 3vw;
-    height: 3vw;
+    height: 2vw;
     background-image: url(../ollio.png);
     background-repeat: no-repeat;
     background-position: left top;
     background-size: contain;
+    z-index: 100;
+    cursor: pointer;
 }
 
 .logoimg {
@@ -230,6 +232,13 @@ body {
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: contain;
+    opacity: 0.2;
+    transition: opacity 1s ease;
+    z-index: 100;
+}
+
+.logoimg:hover {
+    opacity: 1.0;
 }
 
 .modelSelect {
