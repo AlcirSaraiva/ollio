@@ -10,6 +10,8 @@ let currentController = null;
 let MAX_TOKENS = 3072;
 let conversations = JSON.parse(localStorage.getItem("conversations")) || {};
 let currentConversationId = null;
+let isMaximized = false;
+let originalState = null;
 
 // UI
 
@@ -749,6 +751,41 @@ function init() {
     newBtn.title = "Start a new conversation";
     if (newBtn) {
         newBtn.addEventListener("click", startNewConversation);
+    }
+
+    // Maximize/Restore button
+    const maximizeBtn = document.getElementById("maximizeBtn");
+    const chatContainer = document.querySelector(".chat-container");
+    
+    console.log("Maximize button found:", maximizeBtn);
+    console.log("Chat container found:", chatContainer);
+    
+    if (maximizeBtn && chatContainer) {
+        maximizeBtn.addEventListener("click", () => {
+            console.log("Maximize button clicked!");
+            isMaximized = !isMaximized;
+            
+            if (isMaximized) {
+                // Store original state
+                originalState = {
+                    width: chatContainer.style.width,
+                    left: chatContainer.style.left
+                };
+                // Apply maximized state
+                chatContainer.classList.add("maximized");
+                maximizeBtn.textContent = "⤡";
+                maximizeBtn.title = "Restore";
+                console.log("Maximized - class added:", chatContainer.classList.contains("maximized"));
+            } else {
+                // Restore original state
+                chatContainer.classList.remove("maximized");
+                maximizeBtn.textContent = "⤢";
+                maximizeBtn.title = "Maximize/Restore";
+                console.log("Restored - class removed");
+            }
+        });
+    } else {
+        console.error("Maximize button or chat container not found!");
     }
 
     startNewConversation();

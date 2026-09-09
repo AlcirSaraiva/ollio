@@ -74,6 +74,47 @@ body {
     flex-direction: column;
     border-left: 1px solid var(--clr-surface-a20);
     border-right: 1px solid var(--clr-surface-a20);
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.chat-container.maximized {
+    width: 100vw !important;
+    left: 0 !important;
+    height: 100vh !important;
+    top: 0 !important;
+    z-index: 1000;
+    border-left: none !important;
+    border-right: none !important;
+}
+
+.maximize-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--clr-surface-a30);
+    border-radius: 6px;
+    background-color: var(--clr-surface-a20);
+    color: var(--clr-surface-a90);
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.maximize-btn:hover {
+    background-color: var(--clr-surface-a30);
+    border-color: var(--clr-primary-a30);
+}
+
+.maximize-btn:active {
+    transform: scale(0.95);
 }
 
 .chat-history {
